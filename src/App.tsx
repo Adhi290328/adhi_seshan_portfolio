@@ -82,7 +82,7 @@ function ParticleField() {
     return positions;
   }, []);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (ref.current) {
       ref.current.rotation.x -= delta / 10;
       ref.current.rotation.y -= delta / 15;
@@ -443,7 +443,7 @@ function Skills() {
     { name: 'Languages', items: ['Python', 'JavaScript', 'TypeScript', 'Dart', 'Java'], color: 'cyan' },
     { name: 'Frameworks', items: ['React', 'Flutter', 'Flask', 'Node.js'], color: 'purple' },
     { name: 'Security', items: ['VirusTotal API', 'Shodan', 'AbuseIPDB'], color: 'red' },
-    { name: 'Tools', items: ['Git', 'Docker', 'VS Code', 'Power BI'], color: 'green' }
+    { name: 'Tools', items: ['Git', 'VS Code', 'Power BI'], color: 'green' }
   ];
 
   return (
