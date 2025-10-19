@@ -207,7 +207,7 @@ function Hero() {
 }
 
 // Project Card
-function ProjectCard({ project, index }: { project: typeof projects[0], index: number }) {
+function ProjectCard({ project }: { project: typeof projects[0] }) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -284,9 +284,6 @@ function ProjectCard({ project, index }: { project: typeof projects[0], index: n
 
 // Projects Section
 function Projects() {
-  const [filter, setFilter] = useState('all');
-  const categories = ['all', 'security', 'mobile', 'web'];
-
   return (
     <section id="projects" className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
@@ -314,8 +311,8 @@ function Projects() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+          {projects.map((project, _index) => (
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       </div>
@@ -382,8 +379,8 @@ function Skills() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {skillCategories.map((category, idx) => (
-            <SkillCard key={category.name} category={category} index={idx} />
+          {skillCategories.map((category, _idx) => (
+            <SkillCard key={category.name} category={category} />
           ))}
         </div>
       </div>
@@ -392,7 +389,7 @@ function Skills() {
 }
 
 // Skill Card with Progress Animation
-function SkillCard({ category, index }: { category: any, index: number }) {
+function SkillCard({ category }: { category: any }) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
