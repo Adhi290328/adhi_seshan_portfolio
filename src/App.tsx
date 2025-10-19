@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope, FaPhone, FaMapMarkerAlt, FaExternalLinkAlt, FaShieldAlt, FaMobile, FaChevronRight, FaCode, FaServer, FaLock, FaTools } from 'react-icons/fa';
 
 // Project Data
@@ -8,7 +8,7 @@ const projects = [
     name: "CyberSecWatch",
     tagline: "Real-Time Threat Detection & Network Monitoring",
     icon: <FaShieldAlt />,
-    duration: "mar 2025 – may 2025",
+    duration: "Jan 2025 – Apr 2025",
     techStack: ["Python", "Flask", "SQLite", "Power BI", "VirusTotal API"],
     overview: "Comprehensive real-time cybersecurity framework for threat detection and mitigation.",
     features: [
@@ -26,7 +26,7 @@ const projects = [
     name: "Krishi Saathi",
     tagline: "Smart Farming Assistant App",
     icon: <FaMobile />,
-    duration: "Aug 2025 – Oct 2025",
+    duration: "Aug 2024 – Oct 2024",
     techStack: ["Flutter", "Dart", "Firebase", "REST APIs"],
     overview: "Farmer-centric mobile app for data-driven agriculture decisions.",
     features: [
@@ -44,7 +44,7 @@ const projects = [
 const personalInfo = {
   name: "ADHI SESHAN S",
   title: "Full Stack Developer",
-  subtitle: "Cyber Curious",
+  subtitle: "Cybersecurity enthusiast",
   email: "adhiseshanadhiseshan001@gmail.com",
   phone: "+91 6374366480",
   location: "Chennai, Tamil Nadu",
@@ -113,6 +113,21 @@ function Navbar() {
 
 // Hero Section
 function Hero() {
+  const [currentRole, setCurrentRole] = useState(0);
+  const roles = [
+    "Full Stack Developer",
+    "Cybersecurity Specialist",
+    "Software Engineer",
+    "Problem Solver"
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentRole((prev) => (prev + 1) % roles.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center bg-gradient-to-br from-blue-50 via-white to-gray-50">
       <div className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
@@ -125,13 +140,18 @@ function Hero() {
             {personalInfo.name}
           </h1>
           
-          <h2 className="text-2xl md:text-3xl text-blue-600 font-semibold mb-4">
-            {personalInfo.title}
-          </h2>
-          
-          <p className="text-xl text-gray-600 mb-6">
-            {personalInfo.subtitle}
-          </p>
+          <div className="h-16 mb-4 overflow-hidden">
+            <div 
+              className="transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateY(-${currentRole * 4}rem)` }}
+            >
+              {roles.map((role, idx) => (
+                <h2 key={idx} className="text-2xl md:text-3xl text-blue-600 font-semibold h-16 flex items-center">
+                  {role}
+                </h2>
+              ))}
+            </div>
+          </div>
 
           <p className="text-gray-600 mb-8 leading-relaxed">
             Passionate about building secure, scalable applications with expertise in full-stack development and cybersecurity. Committed to delivering innovative solutions that drive business value.
@@ -187,7 +207,7 @@ function Hero() {
 }
 
 // Project Card
-function ProjectCard({ project }: { project: typeof projects[0] }) {
+function ProjectCard({ project, index }: { project: typeof projects[0], index: number }) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -264,24 +284,82 @@ function ProjectCard({ project }: { project: typeof projects[0] }) {
 
 // Projects Section
 function Projects() {
+  const [filter, setFilter] = useState('all');
+  const categories = ['all', 'security', 'mobile', 'web'];
+
   return (
     <section id="projects" className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Featured Projects</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-gray-600 max-w-2xl mx-auto mb-8">
             Innovative solutions combining technical excellence with practical business impact
           </p>
+          
+          {/* Project Counter Animation */}
+          <div className="flex justify-center gap-8 mb-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-600">
+                <CountUp end={projects.length} />+
+              </div>
+              <p className="text-gray-600 text-sm">Projects Completed</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-600">
+                <CountUp end={8} />+
+              </div>
+              <p className="text-gray-600 text-sm">Technologies Used</p>
+            </div>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+          {projects.map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
       </div>
     </section>
   );
+}
+
+// Counter Component
+function CountUp({ end }: { end: number }) {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          let start = 0;
+          const duration = 2000;
+          const increment = end / (duration / 16);
+          
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(Math.floor(start));
+            }
+          }, 16);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [end, hasAnimated]);
+
+  return <div ref={ref}>{count}</div>;
 }
 
 // Skills Section
@@ -304,32 +382,64 @@ function Skills() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          {skillCategories.map((category) => (
-            <div
-              key={category.name}
-              className="bg-white p-6 rounded-lg shadow-md border border-gray-200"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                  {category.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900">{category.name}</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {category.items.map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
+          {skillCategories.map((category, idx) => (
+            <SkillCard key={category.name} category={category} index={idx} />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+// Skill Card with Progress Animation
+function SkillCard({ category, index }: { category: any, index: number }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="bg-white p-6 rounded-lg shadow-md border border-gray-200"
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
+          {category.icon}
+        </div>
+        <h3 className="text-xl font-semibold text-gray-900">{category.name}</h3>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {category.items.map((skill: string, i: number) => (
+          <span
+            key={skill}
+            className="px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm transition-all duration-300"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(10px)',
+              transitionDelay: `${i * 100}ms`
+            }}
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 
