@@ -116,7 +116,7 @@ function Hero() {
   const [currentRole, setCurrentRole] = useState(0);
   const roles = [
     "Full Stack Developer",
-    "Cybersecurity Specialist",
+    "Cybersecurity Enthusiast",
     "Software Engineer",
     "Problem Solver"
   ];
