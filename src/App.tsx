@@ -187,7 +187,7 @@ function Hero() {
 }
 
 // Project Card
-function ProjectCard({ project, index }: { project: typeof projects[0], index: number }) {
+function ProjectCard({ project }: { project: typeof projects[0] }) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -275,8 +275,8 @@ function Projects() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
           ))}
         </div>
       </div>
